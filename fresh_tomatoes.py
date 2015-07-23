@@ -34,7 +34,7 @@ main_page_head = '''
         }
         .movie-tile {
             margin-bottom: 20px;
-            padding-top: 20px;
+            padding-top: 20px 0 0 0;
         }
         .movie-tile:hover {
             background-color: #EEE;
@@ -122,6 +122,9 @@ movie_tile_content = '''
 <div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
     <img src="{poster_image_url}" width="220" height="342">
     <h2>{movie_title}</h2>
+    <p>Released: {movie_date}</p>
+    <p>Starring: {movie_cast}</p>
+    <p>Directed By: {movie_director}</p>
 </div>
 '''
 
@@ -134,11 +137,18 @@ def create_movie_tiles_content(movies):
         youtube_id_match = youtube_id_match or re.search(r'(?<=be/)[^&#]+', movie.trailer_youtube_url)
         trailer_youtube_id = youtube_id_match.group(0) if youtube_id_match else None
 
+        # Convert the array of cast members to a comma seperated string
+        cast_members = ", ".join(movie.cast)
+        
         # Append the tile for the movie with its content filled in
         content += movie_tile_content.format(
             movie_title=movie.title,
             poster_image_url=movie.poster_image_url,
-            trailer_youtube_id=trailer_youtube_id
+            trailer_youtube_id=trailer_youtube_id,
+            # I added the following information
+            movie_date=movie.date,
+            movie_cast=cast_members,
+            movie_director=movie.director
         )
     return content
 
